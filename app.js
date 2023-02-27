@@ -19,14 +19,14 @@ app.use(express.json());
 app.use("/websites", websiteRoute);
 
 app.get("/", (req, res) => {
-  res.send("access denied");
+  res.status(403).send("access denied");
 });
 
-app.get("/yelp", async (req, res) => {
-  // const { businessURL } = req.params;
+app.get("/yelp/:businessURL", async (req, res) => {
+  const { businessURL } = req.params;
   // console.log({ businessURL });
   try {
-    const { data: html } = await axios.get("https://www.yelp.com/biz/trisara-san-francisco");
+    const { data: html } = await axios.get(`https://www.yelp.com/biz/${businessURL}`);
     const data = [];
     const $ = Cheerio.load(html);
     $('[aria-label="Recommended Reviews"] ul:not([aria-label="Rating"]) li').each((i, element) => {
